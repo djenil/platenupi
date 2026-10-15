@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Documentation — Platen UPI</title>
+  <meta name="description" content="Technical documentation and interactive reference for Platen UPI QR code generation endpoints." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/assets/logo.png?v=1">
+
+   <!-- Primary Meta Tags -->
+  <title>Platen UPI — Free UPI QR Code Generator & Desk Standee Typesetter</title>
+  <meta name="title" content="Platen UPI API — Free UPI QR Code Generator & Desk Standee Typesetter API" />
+  <meta name="description" content="Generate NPCI-compliant UPI payment QR codes and export printable counter standees. Compatible with Google Pay, PhonePe, Paytm, BHIM, and CRED." />
+  <meta name="keywords" content="UPI QR code generator, print UPI standee, UPI payment barcode, NPCI static QR, BharatPe alternative, desk payment card maker" />
+  <meta name="author" content="Platen UPI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://platenupi.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://platenupi.com/" />
+  <meta property="og:title" content="Platen UPI — Free UPI QR Code Generator & Desk Standee Typesetter" />
+  <meta property="og:description" content="Generate NPCI-compliant UPI payment QR codes and export printable counter standees. Zero commission, client-side, instant." />
+  <meta property="og:image" content="https://platenupi.com/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Platen UPI — Free UPI QR Code Generator" />
+  <meta name="twitter:description" content="Design and export custom print-ready UPI payment desk standees in seconds." />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Platen UPI",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    },
+    "description": "Client-side NPCI-compliant UPI payment barcode and counter standee layout generator."
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #111114;
+      --panel-elevated: #16161a;
+      --border: #232328;
+      --border-focus: #4b4b57;
+      --text: #f4f4f7;
+      --text-muted: #8c8c9b;
+      --text-dim: #545462;
+      --accent: #ffffff;
+      --accent-invert: #09090b;
+      --valid: #10b981;
+      --badge-get: #3b82f6;
+      --badge-post: #10b981;
+      --mono: 'Geist Mono', monospace;
+      --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .shell {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header Nav */
+    header.site-header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .brand-mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark::before {
+      content: '';
+      width: 9px;
+      height: 9px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+
+    .btn-solid {
+      background: var(--accent);
+      color: var(--accent-invert);
+    }
+
+    .btn-solid:hover {
+      background: #e4e4e7;
+    }
+
+    /* Layout Content */
+    main {
+      padding: 64px 0 96px;
+    }
+
+    .doc-hero {
+      margin-bottom: 48px;
+    }
+
+    .doc-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--valid);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .doc-hero h1 {
+      font-size: 2.5rem;
+      letter-spacing: -0.03em;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .doc-hero p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 680px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 48px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Cards & Containers */
+    .endpoint-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+
+    .endpoint-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: var(--panel-elevated);
+    }
+
+    .endpoint-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--mono);
+      font-size: 0.88rem;
+    }
+
+    .method-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-get {
+      background: rgba(59, 130, 246, 0.15);
+      color: var(--badge-get);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-post {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--badge-post);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-all {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .endpoint-path {
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .endpoint-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .endpoint-body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Tables */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 12px 0 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.84rem;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: var(--panel-elevated);
+      letter-spacing: 0.05em;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    td code {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--valid);
+      background: rgba(16, 185, 129, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Code Blocks */
+    .code-block {
+      background: #000000;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: #e4e4e7;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .interactive-tester {
+      background: var(--panel-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .tester-controls {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 0.8fr auto;
+      gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+      .tester-controls {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .tester-input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      padding: 8px 12px;
+      border-radius: 4px;
+      outline: none;
+    }
+
+    .tester-input:focus {
+      border-color: var(--border-focus);
+    }
+
+    .tester-result {
+      display: none;
+      margin-top: 10px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      align-items: center;
+      gap: 20px;
+    }
+
+    .tester-preview-img {
+      width: 130px;
+      height: 130px;
+      background: #fff;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="site-header">
+    <div class="shell nav-row">
+      <a href="/" class="brand-mark">platen upi</a>
+      <nav class="nav-links">
+        <a href="/">Overview</a>
+        <a href="/qr">Standee Maker</a>
+        <a href="/docs" style="color: var(--text);">API Docs</a>
+        <a href="#tip-jar" onclick="openTipModal(event)">Tip the Dev</a>
+      </nav>
+      <a href="/qr" class="btn btn-solid">Open Standee Maker</a>
+    </div>
+  </header>
+<div id="tipModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; max-width:320px; width:100%; padding:24px; text-align:center; position:relative;">
+    <button onclick="closeTipModal()" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;">&times;</button>
+    
+    <div style="font-family:var(--mono); font-size:0.65rem; color:var(--valid); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">Support the project</div>
+    <div style="font-size:1.1rem; font-weight:600; margin-bottom:4px;">Found this useful? Buy the dev a chai.</div>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">100% free, client-side, and ad-free forever. If Platen saved you time today, any small tip is appreciated!</p>
+
+    <!-- Uses your own API stream endpoint! -->
+    <div style="background:#fff; padding:8px; border-radius:6px; display:inline-block; margin-bottom:12px;">
+      <img src="/api/qr/image?pa=dobariajenil@okhdfcbank&pn=Platen%20Chai%20Co.&tn=Chai%20For%20The%20Dev%2c%20Thanks" alt="Tip via UPI" width="160" height="160" style="display:block;" />
+    </div> 
+
+    <div style="font-family:var(--mono); font-size:0.75rem; color:var(--text); word-break:break-all;">dobariajenil@okhdfcbank</div>
+  </div>
+</div>
+
+<script>
+  function openTipModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('tipModal').style.display = 'flex';
+  }
+  function closeTipModal() {
+    document.getElementById('tipModal').style.display = 'none';
+  }
+</script>
+  <main class="shell">
+    
+    <div class="doc-hero">
+      <div class="doc-tag">NPCI Unified Payments Interface Standard</div>
+      <h1>API Reference</h1>
+      <p>
+        Zero-intermediary HTTP endpoints for constructing RFC-compliant <code>upi://pay</code> barcodes and rendering Base64 image payloads or direct PNG byte streams.
+      </p>
+    </div>
+
+    <!-- Parameter Matrix -->
+    <h2 class="section-title">Standard Payload Parameters</h2>
+    <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 12px;">
+      All endpoints consume the following query parameters or JSON body fields:
+    </p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>pa</code></td>
+            <td>String</td>
+            <td><strong>Yes</strong></td>
+            <td>Payee VPA (UPI ID). Must match <code>identifier@bank</code>.</td>
+            <td><code>store@okhdfcbank</code></td>
+          </tr>
+          <tr>
+            <td><code>pn</code></td>
+            <td>String</td>
+            <td>No</td>
+            <td>Payee or merchant trading name.</td>
+            <td><code>Studio Acme</code></td>
+          </tr>
+          <tr>
+            <td><code>am</code></td>
+            <td>Number</td>
+            <td>No</td>
+            <td>Transaction amount. Formats automatically to 2 decimal places.</td>
+            <td><code>299.00</code></td>
+          </tr>
+          <tr>
+            <td><code>tn</code></td>
+            <td>String</td>
+            <td>No</td>
+            <td>Transaction note/memo shown in payer's banking app.</td>
+            <td><code>Invoice 401</code></td>
+          </tr>
+          <tr>
+            <td><code>tr</code></td>
+            <td>String</td>
+            <td>No</td>
+            <td>Transaction reference code for settlement reconciliation.</td>
+            <td><code>INV-0912</code></td>
+          </tr>
+          <tr>
+            <td><code>mc</code></td>
+            <td>String</td>
+            <td>No</td>
+            <td>4-digit ISO/NPCI Merchant Category Code.</td>
+            <td><code>5411</code></td>
+          </tr>
+          <tr>
+            <td><code>cu</code></td>
+            <td>String</td>
+            <td>Auto</td>
+            <td>Currency code. Locked permanently to <code>INR</code>.</td>
+            <td><code>INR</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Endpoint 1: JSON Generate -->
+    <h2 class="section-title">Endpoints</h2>
+
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <div class="endpoint-meta">
+          <span class="method-badge badge-all">GET / POST</span>
+          <span class="endpoint-path">/api/qr/generate</span>
+        </div>
+        <div class="endpoint-desc">JSON response with Base64 QR code and full URI</div>
+      </div>
+      <div class="endpoint-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Constructs the formatted NPCI URI and returns a JSON payload containing the encoded string alongside a raster Data URL ready for direct rendering in an HTML <code>&lt;img&gt;</code> element.
+        </p>
+
+        <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Example Request</div>
+        <div class="code-block">curl -X GET "http://localhost:8080/api/qr/generate?pa=store@okhdfcbank&pn=Corner+Coffee&am=150.00"</div>
+
+        <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Example 200 OK Response</div>
+        <div class="code-block">{
+  "success": true,
+  "upiUri": "upi://pay?pa=store%40okhdfcbank&pn=Corner+Coffee&am=150.00&cu=INR",
+  "qrImage": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAFACAYAAADk..."
+}</div>
+      </div>
+    </div>
+
+    <!-- Endpoint 2: Direct Image Stream -->
+    <div class="endpoint-card">
+      <div class="endpoint-header">
+        <div class="endpoint-meta">
+          <span class="method-badge badge-get">GET</span>
+          <span class="endpoint-path">/api/qr/image</span>
+        </div>
+        <div class="endpoint-desc">Direct PNG byte stream (image/png)</div>
+      </div>
+      <div class="endpoint-body">
+        <p style="font-size: 0.88rem; color: var(--text-muted);">
+          Returns the binary barcode as an <code>image/png</code> response stream. Embed this directly into websites, emails, or PDF invoices without client-side scripts.
+        </p>
+
+        <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase;">Direct Image Tag Usage</div>
+        <div class="code-block">&lt;img src="http://localhost:8080/api/qr/image?pa=billing@icici&pn=Studio+Acme&am=500" alt="UPI Barcode" /&gt;</div>
+
+        <!-- Interactive Sandbox -->
+        <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--text-dim); text-transform: uppercase; margin-top: 6px;">Live Endpoint Tester</div>
+        <div class="interactive-tester">
+          <div class="tester-controls">
+            <input type="text" id="testPa" class="tester-input" placeholder="VPA (e.g. cafe@hdfc)" value="cafe@okhdfcbank" />
+            <input type="text" id="testPn" class="tester-input" placeholder="Name" value="Corner Cafe" />
+            <input type="number" id="testAm" class="tester-input" placeholder="Amount (INR)" value="150" />
+            <button class="btn btn-solid" onclick="runLiveTest()">Test Stream</button>
+          </div>
+          <div class="tester-result" id="testerResult">
+            <img id="testerImg" class="tester-preview-img" alt="Rendered QR" />
+            <div>
+              <div style="font-family: var(--mono); font-size: 0.72rem; color: var(--valid); margin-bottom: 4px;">200 OK — image/png</div>
+              <div id="testerUrl" style="font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); word-break: break-all;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-row">
+      <div>PLATEN UPI — ZERO-INTERMEDIARY SPECIFICATION</div>
+      <div>NPCI V2.0 COMPLIANT</div>
+    </div>
+  </footer>
+
+  <script>
+    function runLiveTest() {
+      const pa = document.getElementById('testPa').value.trim();
+      const pn = document.getElementById('testPn').value.trim();
+      const am = document.getElementById('testAm').value.trim();
+
+      if (!pa) {
+        alert('Please enter a Payee VPA');
+        return;
+      }
+
+      const params = new URLSearchParams({ pa });
+      if (pn) params.append('pn', pn);
+      if (am) params.append('am', am);
+
+      const targetUrl = `/api/qr/image?${params.toString()}`;
+      
+      const img = document.getElementById('testerImg');
+      const urlText = document.getElementById('testerUrl');
+      const box = document.getElementById('testerResult');
+
+      img.src = targetUrl;
+      urlText.textContent = window.location.origin + targetUrl;
+      box.style.display = 'flex';
+    }
+  </script>
+</body>
+</html>
