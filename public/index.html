@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platen UPI — Zero-Intermediary UPI Payment Standees & QR Generator</title>
+  <meta name="description" content="Generate NPCI-compliant UPI QR standees directly to your bank account. No middleman gateways, 0% platform take-rate, instant client-side rendering." />
+    <link rel="icon" type="image/x-icon" href="assets/logo.png?v=1"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+ <!-- Primary Meta Tags -->
+  <title>Platen UPI — Free UPI QR Code Generator & Desk Standee Typesetter</title>
+  <meta name="title" content="Platen UPI — Free UPI QR Code Generator & Desk Standee Typesetter" />
+  <meta name="description" content="Generate NPCI-compliant UPI payment QR codes and export printable counter standees. Compatible with Google Pay, PhonePe, Paytm, BHIM, and CRED." />
+  <meta name="keywords" content="UPI QR code generator, print UPI standee, UPI payment barcode, NPCI static QR, BharatPe alternative, desk payment card maker" />
+  <meta name="author" content="Platen UPI" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://platenupi.com/" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://platenupi.com/" />
+  <meta property="og:title" content="Platen UPI — Free UPI QR Code Generator & Desk Standee Typesetter" />
+  <meta property="og:description" content="Generate NPCI-compliant UPI payment QR codes and export printable counter standees. Zero commission, client-side, instant." />
+  <meta property="og:image" content="https://platenupi.com/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Platen UPI — Free UPI QR Code Generator" />
+  <meta name="twitter:description" content="Design and export custom print-ready UPI payment desk standees in seconds." />
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Platen UPI",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    },
+    "description": "Client-side NPCI-compliant UPI payment barcode and counter standee layout generator."
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #09090b;
+      --panel: #111114;
+      --panel-elevated: #16161a;
+      --border: #232328;
+      --border-focus: #4b4b57;
+      --text: #f4f4f7;
+      --text-muted: #8c8c9b;
+      --text-dim: #545462;
+      --accent: #ffffff;
+      --accent-invert: #09090b;
+      --valid: #10b981;
+      --mono: 'Geist Mono', monospace;
+      --sans: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--sans);
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Layout Utilities */
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header Nav */
+    header.site-header {
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: rgba(9, 9, 11, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 64px;
+    }
+
+    .brand-mark {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark::before {
+      content: '';
+      width: 9px;
+      height: 9px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 0.86rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links a {
+      transition: color 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .btn-solid {
+      background: var(--accent);
+      color: var(--accent-invert);
+    }
+
+    .btn-solid:hover {
+      background: #e4e4e7;
+    }
+
+    .btn-outline {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--border-focus);
+    }
+
+    /* Hero Section */
+    .hero {
+      padding: 96px 0 64px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--valid);
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--valid);
+    }
+
+    h1.hero-headline {
+      font-size: 3rem;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      max-width: 520px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+    }
+
+    /* Standee Graphic Frame */
+    .hero-standee-preview {
+      background: radial-gradient(circle at 50% 50%, #1f1f26 0%, #111114 70%);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      position: relative;
+    }
+
+    .mini-standee {
+      width: 240px;
+      background: #ffffff;
+      color: #000;
+      border-radius: 6px;
+      padding: 24px 18px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .mini-standee-sub {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      color: #71717a;
+    }
+
+    .mini-standee-name {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .mini-qr-box {
+      width: 140px;
+      height: 140px;
+      background: #f4f4f5;
+      border: 1px dashed #a1a1aa;
+      margin: 16px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: #71717a;
+    }
+
+    .mini-standee-vpa {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: #3f3f46;
+    }
+
+    .mini-standee-apps {
+      font-family: var(--mono);
+      font-size: 0.5rem;
+      color: #a1a1aa;
+      margin-top: 12px;
+      letter-spacing: 0.05em;
+    }
+
+    /* Specs Strip */
+    .protocol-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+      background: var(--panel);
+    }
+
+    .protocol-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .spec-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .spec-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .spec-val {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* Audience Matrix */
+    .section-wrap {
+      padding: 96px 0;
+    }
+
+    .section-head {
+      margin-bottom: 48px;
+    }
+
+    .section-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .audience-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .card-top {
+      margin-bottom: 24px;
+    }
+
+    .card-num {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 1.18rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-body {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .card-points {
+      list-style: none;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+
+    .card-points li {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-points li::before {
+      content: '→';
+      color: var(--text-dim);
+    }
+
+    /* Feature Breakdown */
+    .features-panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+    }
+
+    .feature-item {
+      display: flex;
+      gap: 16px;
+    }
+
+    .feature-dot {
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--accent);
+      border-radius: 2px;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .feature-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .feature-desc {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* CTA Section */
+    .cta-banner {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 64px 32px;
+      text-align: center;
+      margin: 64px 0 96px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .cta-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .cta-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 480px;
+      margin-bottom: 28px;
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 0;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    @media (max-width: 860px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 56px 0;
+      }
+      .protocol-grid, .grid-3, .features-panel {
+        grid-template-columns: 1fr;
+      }
+      .nav-links {
+        display: none;
+      }
+      .footer-row {
+        flex-direction: column;
+        gap: 16px;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell nav-row">
+      <a href="/" class="brand-mark">platen upi</a>
+      <nav class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="/qr">Standee Maker</a>
+        <a href="/docs">API Docs</a>
+        <a href="#tip-jar" onclick="openTipModal(event)">Tip the Dev</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="/qr" class="btn btn-solid">Open Standee Maker</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section id="overview" class="hero">
+      <div>
+        <div class="hero-tag">NPCI Standard · Client-Side Private · Zero Intermediaries</div>
+        <h1 class="hero-headline">Direct UPI counter standees. Zero commission.</h1>
+        <p class="hero-desc">
+          Generate print-ready desk standees and standard NPCI barcodes for your store, studio, or billing desk in 5 seconds. Payments settle directly into your bank account with no aggregators in between.
+        </p>
+        <div class="hero-buttons">
+          <a href="/qr" class="btn btn-solid" style="padding: 12px 24px; font-size: 0.95rem;">Generate Standee</a>
+          <a href="/docs" class="btn btn-outline" style="padding: 12px 20px;">API Docs</a>
+        </div>
+      </div>
+<div id="tipModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); z-index:200; align-items:center; justify-content:center; padding:16px;">
+  <div style="background:var(--panel); border:1px solid var(--border); border-radius:8px; max-width:320px; width:100%; padding:24px; text-align:center; position:relative;">
+    <button onclick="closeTipModal()" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--text-dim); font-size:18px; cursor:pointer;">&times;</button>
+    
+    <div style="font-family:var(--mono); font-size:0.65rem; color:var(--valid); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px;">Support the project</div>
+    <div style="font-size:1.1rem; font-weight:600; margin-bottom:4px;">Found this useful? Buy the dev a chai.</div>
+    <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:16px;">100% free, client-side, and ad-free forever. If Platen saved you time today, any small tip is appreciated!</p>
+
+    <div style="background:#fff; padding:8px; border-radius:6px; display:inline-block; margin-bottom:12px;">
+      <img src="/api/qr/image?pa=dobariajenil@okhdfcbank&pn=Platen%20Chai%20Co.&tn=Chai%20For%20The%20Dev%2c%20Thanks" alt="Tip via UPI" width="160" height="160" style="display:block;" />
+    </div> 
+
+    <div style="font-family:var(--mono); font-size:0.75rem; color:var(--text); word-break:break-all;">dobariajenil@okhdfcbank</div>
+  </div>
+</div>
+
+<script>
+  function openTipModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('tipModal').style.display = 'flex';
+  }
+  function closeTipModal() {
+    document.getElementById('tipModal').style.display = 'none';
+  }
+</script>
+      <div class="hero-standee-preview">
+        <div class="mini-standee">
+          <div class="mini-standee-sub">Scan to Pay via Any UPI App</div>
+          <div class="mini-standee-name">Corner Coffee Lab</div>
+          <div class="mini-qr-box">VALID UPI QR</div>
+          <div class="mini-standee-vpa">cornercoffee@hdfcbank</div>
+          <div class="mini-standee-apps">BHIM · GPAY · PHONEPE · PAYTM · CRED</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="protocol-strip">
+      <div class="protocol-grid">
+        <div class="spec-item">
+          <span class="spec-label">Payload Format</span>
+          <span class="spec-val">RFC-Standard upi://pay URI</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Platform Fee</span>
+          <span class="spec-val">0.00% (Free forever)</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Settlement Mode</span>
+          <span class="spec-val">Direct Bank-to-Bank</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Data Privacy</span>
+          <span class="spec-val">100% In-Browser (No DB)</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-wrap">
+      <div class="section-head">
+        <div class="section-badge">Deployments</div>
+        <h2 class="section-title">Built for everyone taking payments on the ground.</h2>
+      </div>
+
+      <div class="grid-3">
+
+        <article class="audience-card">
+          <div class="card-top">
+            <div class="card-num">01 / RETAIL & FOOD</div>
+            <h3 class="card-title">Brick-and-Mortar Counters</h3>
+            <p class="card-body">
+              Generate a clean, high-resolution 4×6-inch display designed for boutique acrylic stands. Settle payments straight to your existing current or savings bank account.
+            </p>
+          </div>
+          <ul class="card-points">
+            <li>Standard ISO/NPCI MCC parameters</li>
+            <li>Fixed counter or dynamic bill memos</li>
+            <li>Designed for standard acrylic desk frames</li>
+          </ul>
+        </article>
+
+        <article class="audience-card">
+          <div class="card-top">
+            <div class="card-num">02 / FLEA MARKETS & STUDIOS</div>
+            <h3 class="card-title">Pop-ups & Independent Creators</h3>
+            <p class="card-body">
+              Running a weekend art booth or pop-up stall? Set up in 5 seconds without waiting days for aggregator merchant onboarding or hardware deliveries.
+            </p>
+          </div>
+          <ul class="card-points">
+            <li>Preset quick-pay buttons (₹100, ₹500, ₹1k)</li>
+            <li>Zero hardware or device rental costs</li>
+            <li>Instant PNG export for social distribution</li>
+          </ul>
+        </article>
+
+        <article class="audience-card">
+          <div class="card-top">
+            <div class="card-num">03 / INVOICING</div>
+            <h3 class="card-title">Consultants & Clinics</h3>
+            <p class="card-body">
+              Embed invoice identifiers directly inside the transaction URI string. When clients scan the code, their banking app preserves the reference tag on the settlement slip.
+            </p>
+          </div>
+          <ul class="card-points">
+            <li>Custom TR (Transaction Reference) tag</li>
+            <li>Optional exact amount lock</li>
+            <li>Minimalist, unobtrusive desk presentation</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-wrap" style="padding-top: 0;">
+      <div class="section-head">
+        <div class="section-badge">How It Works</div>
+        <h2 class="section-title">Clean engineering, zero middleman custody.</h2>
+      </div>
+
+      <div class="features-panel">
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div>
+            <h4 class="feature-title">Native NPCI Specification</h4>
+            <p class="feature-desc">Barcodes strictly follow the NPCI UPI Common Library standard. Scan seamlessly using Google Pay, PhonePe, Paytm, BHIM, Cred, or any UPI-enabled banking app.</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div>
+            <h4 class="feature-title">Zero Escrow or Float</h4>
+            <p class="feature-desc">Funds never pass through Platen servers or custodial accounts. Money moves directly from customer to your bank account with zero intermediate clearing delay.</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div>
+            <h4 class="feature-title">High-DPI Raster Generation</h4>
+            <p class="feature-desc">Exports pixel-crisp canvas graphics engineered specifically for 4×6-inch photo printing and desk displays without barcode fuzziness or scanning defects.</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-dot"></div>
+          <div>
+            <h4 class="feature-title">Private by Design</h4>
+            <p class="feature-desc">No accounts, passwords, or transaction telemetry. Barcode rendering runs entirely in your local browser sandbox or via stateless API requests.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-banner">
+      <h2 class="cta-title">Ready to print your counter standee?</h2>
+      <p class="cta-desc">No registration, no API key, and no card details needed. Enter your UPI ID, preview your standee, and export.</p>
+      <a href="/qr" class="btn btn-solid" style="padding: 14px 28px; font-size: 0.95rem;">Launch Generator</a>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-row">
+      <div>PLATEN UPI — CLIENT-SIDE TYPESETTER · NPCI UPI V2.0 COMPLIANT</div>
+      <div class="footer-links">
+        <a href="#overview">Overview</a>
+        <a href="/qr">Standee Maker</a>
+        <a href="/docs">API Docs</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
